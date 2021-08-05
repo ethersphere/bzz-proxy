@@ -1,6 +1,6 @@
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
-const { CIDToHash } = require('./cid')
+const { CIDToHash, isCID } = require('./cid')
 
 const PROXY_TARGET = process.env.PROXY_TARGET || `http://localhost:1633`
 const PROXY_PORT = process.env.PROXY_PORT || 8633
@@ -14,7 +14,7 @@ function proxyPort(port) {
 }
 
 function hostToBZZResource(host) {
-    if (host.startsWith('bafyb') && host.length === 59) {
+    if (isCID(host)) {
         const contentHash = CIDToHash(host)
         return contentHash
     } else {

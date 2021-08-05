@@ -29,4 +29,12 @@ function CIDToHash(input) {
     return bytesToHex(hashBytes)
 }
 
-module.exports = { CIDToHash, hashToCID }
+function isCID(input) {
+    return input.startsWith('bafyb') && input.length === 59
+}
+
+function isHash(input) {
+    return input.length === 64 && /^[0-9a-f]+$/i.test(input)
+}
+
+module.exports = { CIDToHash, hashToCID, isCID, isHash }
