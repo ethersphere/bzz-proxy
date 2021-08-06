@@ -34,7 +34,7 @@ function isCID(input) {
 }
 
 function isHash(input) {
-    return input.length === 64 && /^[0-9a-f]+$/i.test(input)
+    return /^[0-9a-f]{64}$/i.test(input)
 }
 
 module.exports = { CIDToHash, hashToCID, isCID, isHash }
