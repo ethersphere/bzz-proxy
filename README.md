@@ -54,3 +54,10 @@ And CID to hash:
 % node cid2hash.js bafybwib33ztmzjf4xq6et4q3kvcg3rbx7mwxdimuquundaphimcquupgnu
 3bde66cca4bcbc3c49f21b55446dc437fb2d71a1948528d181e743050a51e66d
 ```
+
+## Maintainers
+
+- [nugaon](https://github.com/nugaon)
+- [auhau](https://github.com/auhau)
+
+See what "Maintainer" means [here](https://github.com/ethersphere/repo-maintainer).
