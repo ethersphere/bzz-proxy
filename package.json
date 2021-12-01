@@ -13,6 +13,7 @@
   "dependencies": {
     "cids": "^1.1.7",
     "express": "^4.17.1",
-    "http-proxy-middleware": "^2.0.1"
+    "http-proxy-middleware": "^2.0.1",
+    "multicodec": "^3.2.1"
   }
 }

@@ -1,4 +1,5 @@
 const CID = require('cids')
+const multicodec = require('multicodec')
 
 function hexToBytes(hex) {
     const bytes = new Uint8Array(hex.length / 2)
@@ -16,11 +17,23 @@ function bytesToHex(bytes) {
     return hex
 }
 
-function hashToCID(input) {
+const CODEC_MAPPING = {
+    'feed': 'swarm-feed',
+    'manifest': 'swarm-manifest'
+}
+
+function hashToCID(input, type) {
+    if (!(type in CODEC_MAPPING)) {
+        throw new Error('Unknown type.')
+    }
+
     const hashBytes = hexToBytes(input)
-    const multihash = new Uint8Array([0x1b, hashBytes.length, ...hashBytes])
-    const cid = new CID(1, 'dag-pb', multihash)
-    return cid
+
+    const multihash = new Uint8Array([multicodec.KECCAK_256, hashBytes.length, ...hashBytes])
+    const cid = new CID(1, CODEC_MAPPING[type], multihash)
+
+    return new Uint8Array([multicodec.SWARM_NS, ...cid.bytes])
+    // return `${ base32(new Uint8Array([multicodec.SWARM_NS, ...cid.bytes])) }`
 }
 
 function CIDToHash(input) {
