@@ -15,19 +15,26 @@ function proxyPort(port) {
 
 function hostToBZZResource(host) {
     if (isCID(host)) {
-        const contentHash = CIDToHash(host)
-        return contentHash
+        const { reference, type } = CIDToHash(host)
+
+        switch (type){
+            case 'feed':
+                return `/bzz/${reference}` // TBD: Resolving endpoint
+            case 'manifest':
+                return `/bzz/${reference}` // TBD: Non-resolving endpoint
+            default:
+                throw new Error 'Unknown type'
+        }
     } else {
-        return `${host}.eth`
+        return `/bzz/${host}.eth` // TBD: Resolving endpoint
     }
 }
 
 function router(req) {
     const host = req.headers.host.split('.')[0]
-    const bzzResource = hostToBZZResource(host)
+    const route = `${PROXY_TARGET}${hostToBZZResource(host)}`
     const url = req.url
-    const route = `${PROXY_TARGET}/bzz/${bzzResource}`
-    console.log({ bzzResource, route, url })
+    console.log({ route, url })
     return route
 }
 

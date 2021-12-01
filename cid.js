@@ -1,4 +1,5 @@
 const CID = require('cids')
+const multicodec = require('multicodec')
 
 function hexToBytes(hex) {
     const bytes = new Uint8Array(hex.length / 2)
@@ -16,17 +17,40 @@ function bytesToHex(bytes) {
     return hex
 }
 
-function hashToCID(input) {
+const CODEC_MAPPING = {
+    'feed': 'swarm-feed',
+    'manifest': 'swarm-manifest',
+    'chunk': 'swarm-ns',
+    'bytes': 'swarm-ns'
+}
+
+function hashToCID(input, type) {
+    if (!(type in CODEC_MAPPING)) {
+        throw new Error('Unknown type.')
+    }
+
     const hashBytes = hexToBytes(input)
-    const multihash = new Uint8Array([0x1b, hashBytes.length, ...hashBytes])
-    const cid = new CID(1, 'dag-pb', multihash)
+
+    const multihash = new Uint8Array([multicodec.KECCAK_256, hashBytes.length, ...hashBytes])
+    const cid = new CID(1, CODEC_MAPPING[type], multihash)
+
     return cid
 }
 
 function CIDToHash(input) {
     const cid = new CID(input)
+
+    // TODO: Mapping multicodec name to bytes
+    if (!Object.values(CODEC_MAPPING).includes(cid.codec)) {
+        throw new Error('CID with invalid codec. Use swarm related ones only.')
+    }
+
     const hashBytes = cid.multihash.slice(2)
-    return bytesToHex(hashBytes)
+    return {
+        reference: bytesToHex(hashBytes),
+        type: 'feed'
+        // type: reverseMapping(CODEC_MAPPING, cid.codec) // 'feed' | 'manifest'
+    }
 }
 
 function isCID(input) {
