@@ -1,5 +1,7 @@
 # bzz-proxy-poc
 
+**This repo is now archived as we have implemented this functionality as part of https://github.com/ethersphere/gateway-proxy/**
+
 Proof-of-concept proxy service for serving web content from Swarm with subdomains.
 
 # Usage
